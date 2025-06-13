@@ -11,23 +11,29 @@ COPY cmd/ ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o server ./api/main.go
 
 # Final/Run Stage
-FROM mcr.microsoft.com/playwright:latest
+FROM debian:bullseye-slim
 
-# Install only Chromium/Chrome
-ENV PLAYWRIGHT_BROWSERS_PATH=0
-RUN playwright install chrome
-
+# Install Chromium, ffmpeg, yt-dlp
 RUN apt-get update && \
-    apt-get install -y ffmpeg curl && \
+    apt-get install -y \
+        chromium \
+        ffmpeg \
+        curl \
+        ca-certificates \
+        fonts-liberation \
+        --no-install-recommends && \
     curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
-    chmod a+rx /usr/local/bin/yt-dlp
+    chmod a+rx /usr/local/bin/yt-dlp && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Copy app binary and static files
 WORKDIR /app
 COPY --from=build /app/server /app/server
+COPY static/ /app/static/
 
+# Set env vars
 ENV PATH="/app:${PATH}"
 ENV TMPDIR="/tmp"
 
 EXPOSE 8080
-
 ENTRYPOINT ["./server"]
