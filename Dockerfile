@@ -11,7 +11,11 @@ COPY cmd/ ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o server ./api/main.go
 
 # Final/Run Stage
-FROM mcr.microsoft.com/playwright:v1.50.0-noble
+FROM mcr.microsoft.com/playwright:latest
+
+# Install only Chromium/Chrome
+ENV PLAYWRIGHT_BROWSERS_PATH=0
+RUN playwright install chrome
 
 RUN apt-get update && \
     apt-get install -y ffmpeg curl && \
