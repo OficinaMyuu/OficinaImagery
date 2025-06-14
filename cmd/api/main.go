@@ -31,6 +31,8 @@ func main() {
 	e.POST("/api/levels/cards", routes.GetLevelCard)
 	e.POST("/api/levels/roles", routes.GetLevelsRoles)
 
+	e.GET("/api/external/videos", routes.GetVideo)
+
 	if err := e.Start(":8080"); err != nil {
 		e.Logger.Fatal(err)
 	}
