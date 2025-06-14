@@ -32,7 +32,7 @@ COPY --from=build /app/server /app/server
 COPY static/ /app/static/
 
 # Set env vars
-ENV PATH="/app:${PATH}"
+ENV PATH="/app:/usr/local/bin:${PATH}"
 ENV TMPDIR="/tmp"
 
 EXPOSE 8080
