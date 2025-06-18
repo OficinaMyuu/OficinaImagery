@@ -27,4 +27,4 @@ jobs:
           IMAGE_NAME="ghcr.io/kileo13/oficinaimagery:latest"
 
           docker build -t "$IMAGE_NAME" .
-          docker push "$IMAGE_NAME"kileo13/oficinaimagery
+          docker push "$IMAGE_NAME"
